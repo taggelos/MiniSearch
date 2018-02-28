@@ -2,55 +2,126 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <cstring>
+#include <ctype.h>
 //#include <cstdio>
 //#include "trie.h"
-#define LINESIZE 1024
 
 using namespace std;
 
-void readFile(char* myFile){
-	FILE * pFile;
-	char mystring [LINESIZE];
-	int lineNum = 0;
+void paramError(char * programName ,const char * reason){
+	//Display the problem
+	cerr << reason << ", please try again." << endl;
+	//Show the usage and exit.
+	cerr << "Usage : " << programName << " [-i <DOCUMENT>][-k <NUMBER OF RESULTS GREATER THAN ZERO>]" << endl; 
+	exit(1);
+}
 
-	pFile = fopen (myFile, "r");
-	if (pFile == NULL) perror ("Error opening file");
+int numberCheck(char *str){	
+	//In case there is a letter with the number and atoi clears it
+	for (int j=0; j<strlen(str); j++)
+		if (!isdigit(str[j])) return 0;
+	return atoi(str);
+}
+
+
+char** readFile(char* myFile, int &lineNum){
+	FILE * file;
+	char * mystring = NULL;
+	size_t n;
+	//int lineNum = 0;
+	bool firstLine = true;
+	//char ** documents = NULL;
+	int lines = 0;
+
+	file = fopen (myFile, "r");
+	if (file == NULL){
+		cerr << "Error opening file" << endl;
+		exit(2);
+	}
 	else {
-		while ( fgets (mystring , LINESIZE , pFile) != NULL ){
+		while (getline(&mystring, &n, file) !=-1){lines++;}
+		char ** documents = new char*[lines];
+		rewind(file);
+		while (getline(&mystring, &n, file) !=-1){
+			documents[lineNum] = new char[strlen(mystring)];
+			//Store the line without the number
+			memcpy(documents[lineNum],mystring+'\0'+1,strlen(mystring)+1);
 			puts (mystring);
-			char *firstChar = mystring;
-			if (atoi(&mystring[0])==lineNum++) cout << (mystring[0]) <<endl;		
+			//For first character of first line we check without using atoi
+			if (firstLine) {
+				cout << mystring[0]<< "---"<<endl;
+				if (mystring[0] != '0') {
+					cerr << "Invalid first line of file" <<endl;
+					exit(3);
+				}
+				firstLine = false;
+				lineNum++;
+			}
+			else if (atoi(mystring)!=lineNum++) {
+				cerr << "Invalid number in line "<< lineNum-1 << " of file" <<endl;
+				exit(4);
+			}			
 		}
-	    fclose (pFile);
+		free(mystring);
+		fclose (file);
+		return documents;
+	}
+}
+
+void print(char ** arr, int lineNum){
+	for (int i=0; i < lineNum ; i++)
+		for (int j=0; j < strlen(arr[i]);j++)
+			cout << " --- " << arr[i][j] << endl;
+}
+
+void printSplit(char ** arr, int lineNum){
+	char * pch;
+	for (int i=0; i < lineNum ; i++){
+		cout << "Splitting string "<< arr[i] << " into tokens:" << endl;
+		pch = strtok (arr[i]," \t");
+		while (pch != NULL){
+			printf ("%s\n",pch);
+			pch = strtok (NULL, " \t");
+		}
 	}
 }
 
 int main(int argc, char* argv[]){
-	//Use by default 10 as number of results (piazza) 	
-	char* inFile = NULL; 
-	int numRes = 10; 
-	bool fileTaken = false, numTaken = false;
-	//We iterate over argv[] to get the parameters stored inside
-	for (int i = 1; i < argc; i++){	
-		if (i+1 != argc)
-			if (strcmp(argv[i],"-i") == 0 && fileTaken == false){
-				inFile = argv[i+1];
-				fileTaken = true;
-			}
-			else if (strcmp(argv[i],"-k") == 0){	
-				numRes = atoi(argv[i+1]);
-			}
-	}	
-	//If we do not have the right number of parameters
-	//show the usage and exit.	
-	if (argc != 5 || inFile == NULL || numRes<=0){
-		perror ("Not enough or invalid arguments, please try again.");
-		cout << "Usage : " << argv[0] << " [-i <DOCUMENT>][-k <NUMBER OF RESULTS GREATER THAN ZERO>]" << endl; 
-		exit(0);
+	char* inputFile = NULL;	
+	//Use by default 10 as number of results (piazza) 
+	int numRes = 10;
+	if (argc == 3){
+		if (strcmp(argv[1],"-i")) {
+			paramError(argv[0], "You need to provide input file");
+		}
+		inputFile = argv[2];
 	}
-	cout << "Arguments taken : " << inFile << " " << numRes << endl;
+	else if (argc== 5) {
+		if (!strcmp(argv[1],"-i") && !strcmp(argv[3],"-k")){
+			inputFile = argv[2];
+			numRes = numberCheck(argv[4]);	
+			if (numRes <=0) paramError(argv[0], "This is not an appropriate number");
+		}
+		else if (!strcmp(argv[3],"-i") && !strcmp(argv[1],"-k")){
+			inputFile = argv[4];
+			numRes = numberCheck(argv[2]);	
+			if (numRes <=0) paramError(argv[0], "This is not an appropriate number");
+		}
+		else {
+			paramError(argv[0], "Invalid arguments");
+		}
+		//paramError(argv[0], "You need to provide input file");
+	}
+	else paramError(argv[0], "This is not an appropriate syntax");
 
-	readFile(inFile);
+	cout << "Arguments taken : " << inputFile << " " << numRes << endl;
+	int lineNum = 0;
+	char ** documents = readFile(inputFile, lineNum);
+	if (documents == NULL ) cout << "FUCKK" <<endl;
+	//print(documents, lineNum);
+	//printSplit(documents, lineNum);
+
 	//to be continued..
 	cin.get();
 	exit(0);
