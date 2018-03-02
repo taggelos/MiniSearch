@@ -5,7 +5,8 @@
 #include <cstring>
 #include <ctype.h>
 //#include <cstdio>
-//#include "trie.h"
+#include "postingList.h"
+#include "letterList.h"
 
 using namespace std;
 
@@ -79,12 +80,41 @@ void printSplit(char ** arr, int lineNum){
 	char * pch;
 	for (int i=0; i < lineNum ; i++){
 		cout << "Splitting string "<< arr[i] << " into tokens:" << endl;
-		pch = strtok (arr[i]," \t");
+		pch = strtok (arr[i]," \t\n");
 		while (pch != NULL){
 			printf ("%s\n",pch);
-			pch = strtok (NULL, " \t");
+			pch = strtok (NULL, " \t\n");
 		}
 	}
+}
+
+void insertTrie(char** documents, int lineNum){
+	PostingList plist;
+	//print(documents, lineNum);
+	//printSplit(documents, lineNum);
+	plist.add(4,4);
+	plist.add(3,3);
+	plist.add(22,13);
+	plist.add(32,121);
+	plist.add(47,88);
+	plist.print();
+
+	LetterList llist;
+	//for (int i=0; i < lineNum ; i++){
+	//	llist.add(documents[i]);
+	//}
+	char * word;
+	for (int i=0; i < lineNum ; i++){
+		cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
+		word = strtok (documents[i]," \t\n");
+		while (word != NULL){
+			printf ("%s\n",word);			
+			llist.add(word);
+			word = strtok (NULL, " \t\n");
+		}
+	}
+	//llist.add(documents[0]);
+	llist.printNext();
 }
 
 int main(int argc, char* argv[]){
@@ -118,9 +148,7 @@ int main(int argc, char* argv[]){
 	cout << "Arguments taken : " << inputFile << " " << numRes << endl;
 	int lineNum = 0;
 	char ** documents = readFile(inputFile, lineNum);
-	if (documents == NULL ) cout << "FUCKK" <<endl;
-	//print(documents, lineNum);
-	//printSplit(documents, lineNum);
+	insertTrie(documents,lineNum);
 
 	//to be continued..
 	cin.get();
