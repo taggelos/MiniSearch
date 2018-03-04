@@ -10,18 +10,19 @@ class PostingList {
 	struct Node {
 		//Number of document line
 		int line;
-		//Times the word was found
+		//Times the word was found in a sentence
 		int count; 
 		Node* next;
 	};
 	Node* head;
-	int counter;
+	//Number of Nodes
+	int numNodes;
 	//Total times the word was found
 	int totalTimes;
 public:
 	PostingList();
-	void add(int line, int count);
-	int count();
+	void add(int line);
+	int countNodes();
 	void print();
 	~PostingList();	
 };

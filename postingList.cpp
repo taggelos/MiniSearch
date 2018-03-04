@@ -5,30 +5,42 @@ using namespace std;
 
 PostingList::PostingList(){
 	head = NULL;
-	counter = 0;
+	numNodes = 0;
 }
 
-void PostingList::add(int line,int count){
-	Node* n = new Node;
-	n->next = NULL;
-	n->line= line;
-	n->count= count;	
-	if (head != NULL){
-		Node* temp = head;
-		while(temp->next != NULL){
-			temp = temp->next;
+void PostingList::add(int line){
+	Node* temp = head;
+	bool found = false;
+	while(temp!= NULL){
+		if (temp->line == line) {
+			found = true;
+			break;
 		}
-		temp->next = n;
+		temp = temp->next;
 	}
-	else {
-		head = n;
+	if (found) temp->count++;
+	else{
+		Node* n = new Node;
+		n->next = NULL;
+		n->line= line;
+		n->count= 1;	
+		if (head != NULL){
+			Node* temp = head;
+			while(temp->next != NULL){
+				temp = temp->next;
+			}
+			temp->next = n;
+		}
+		else {
+			head = n;
+		}
+		numNodes++;
 	}
-	counter++;
-	totalTimes += count;
+	totalTimes += 1;
 }
 
-int PostingList::count(){
-	return counter;
+int PostingList::countNodes(){
+	return numNodes;
 }
 
 void PostingList::print(){

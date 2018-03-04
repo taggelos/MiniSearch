@@ -11,20 +11,21 @@ class LetterList {
 	struct Node {
 		//Letter
 		char letter;
-		Node* next;
+		Node* left;
 		Node* right;
 		PostingList* plist;
 	};
 	Node* head;
-	int counter;
-	PostingList * p;
+	int numNodes; //Node (Letter) counter
+	int numWords; //Word counter
+	PostingList * p; //Hashtable for end nodes of words?
 public:
 	LetterList();
-	void add(char* word);
-	int count();
-	//void print();
-	void printNext();
+	void add(char* word, int lineNum);
+	int countNodes();
+	void printLeft();
 	void printRight();
+	void printLeafs();
 	~LetterList();	
 };
 
