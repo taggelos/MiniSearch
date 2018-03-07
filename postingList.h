@@ -13,6 +13,7 @@ class PostingList {
 		//Times the word was found in a sentence
 		int count; 
 		Node* next;
+		Node(int line);
 	};
 	Node* head;
 	//Number of Nodes
@@ -20,7 +21,7 @@ class PostingList {
 	//Total times the word was found
 	int totalTimes;
 public:
-	PostingList();
+	PostingList(int line);
 	void add(int line);
 	int countNodes();
 	void print();

@@ -3,9 +3,16 @@
 #include "postingList.h"
 using namespace std;
 
-PostingList::PostingList(){
-	head = NULL;
-	numNodes = 0;
+PostingList::Node::Node(int l){
+	next = NULL;
+	line= l;
+	count= 1;
+}
+
+PostingList::PostingList(int line){
+	head = new Node(line);
+	numNodes = 1;
+	totalTimes = 1;
 }
 
 void PostingList::add(int line){
@@ -14,26 +21,19 @@ void PostingList::add(int line){
 	while(temp!= NULL){
 		if (temp->line == line) {
 			found = true;
+			temp->count++;
 			break;
 		}
 		temp = temp->next;
 	}
-	if (found) temp->count++;
-	else{
-		Node* n = new Node;
-		n->next = NULL;
-		n->line= line;
-		n->count= 1;	
-		if (head != NULL){
-			Node* temp = head;
-			while(temp->next != NULL){
-				temp = temp->next;
-			}
-			temp->next = n;
+	if (!found){
+		Node* n = new Node(line);
+		temp = head;
+		// O(1) to be changed
+		while(temp->next != NULL){
+			temp = temp->next;
 		}
-		else {
-			head = n;
-		}
+		temp->next = n;
 		numNodes++;
 	}
 	totalTimes += 1;
@@ -54,9 +54,9 @@ void PostingList::print(){
 
 PostingList::~PostingList(){
 	Node* temp = NULL;
-	while(head -> next != NULL){
-		temp = head->next;
-		delete head;
-		head = temp;
+	while(head!= NULL){
+		temp = head;
+		head = head->next;
+		delete temp;
 	}
 }
