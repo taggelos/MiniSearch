@@ -17,12 +17,12 @@ void commandError(){
 	cerr << "####################################################"<<endl;
 }
 
-int numberCheck(char *str){
+bool numberCheck(char *str){
 	int len = (int)strlen(str);
 	//In case there is a letter with the number and atoi clears it
 	for (int j=0; j<len; j++)
-		if (!isdigit(str[j])) return 0;
-	return atoi(str);
+		if (!isdigit(str[j])) return false;
+	return true;
 }
 
 char** readFile(char* myFile, int &lines){
@@ -40,26 +40,32 @@ char** readFile(char* myFile, int &lines){
 		rewind(file);
 		char * mystring;
 		size_t n;
-		for (int i=0; i<lines;i++){
+		//First Line
+		mystring = NULL;
+		n = 0;
+		getline(&mystring, &n, file);
+		documents[0] = new char[strlen(mystring)+1];
+		strcpy(documents[0],mystring);
+		char *token =strtok(mystring," \t\n");
+		if (mystring[0] != '0' || (token!=NULL && !numberCheck(token))) {
+			cerr << "Invalid first line of file" <<endl;
+			exit(3);
+		}
+		//Rest of Lines
+		for (int i=1; i<lines;i++){
 			//Reinitialize
 			mystring = NULL;
 			n = 0;
 			getline(&mystring, &n, file);
 			documents[i] = new char[strlen(mystring)+1];
-			//Store the line without the number
 			strcpy(documents[i],mystring);
+			char *token =strtok(mystring," \t\n");
 			//For first character of first line we check without using atoi
-			if (i==0) {
-				if (mystring[0] != '0') {
-					cerr << "Invalid first line of file" <<endl;
-					exit(3);
-				}
-			}
-			else if (atoi(mystring)!=i) {
-				cerr <<"Invalid number close in line "<< i+1 << " of file" <<endl;  //i - 1 ???
+			if (atoi(mystring)!=i || (token!=NULL && !numberCheck(token))) {
+				cerr <<"Invalid number close in line "<< i+1 << " of file" <<endl;
 				exit(4);
 			}
-			free(mystring);				
+			free(mystring);
 		}
 		fclose (file);
 		return documents;
@@ -76,13 +82,15 @@ void inputCheck(int argc, char* argv[], char*& inputFile, int& topK){
 	else if (argc== 5) {
 		if (!strcmp(argv[1],"-i") && !strcmp(argv[3],"-k")){
 			inputFile = argv[2];
-			topK = numberCheck(argv[4]);
+			if (numberCheck(argv[4])) topK = atoi(argv[4]);
+			else topK = 0;
 			//Invalid for negative or zero result
 			if (topK <=0) paramError(argv[0], "This is not an appropriate number");
 		}
 		else if (!strcmp(argv[3],"-i") && !strcmp(argv[1],"-k")){
 			inputFile = argv[4];
-			topK = numberCheck(argv[2]);
+			if (numberCheck(argv[2])) topK = atoi(argv[2]);
+			else topK = 0;
 			//Invalid for negative or zero result
 			if (topK <=0) paramError(argv[0], "This is not an appropriate number");
 		}
@@ -132,8 +140,10 @@ int numberLen(int n, int base = 10){
 	} while (n);
 	return count;
 }
+
 /******************************TRIE****************************************************/
-void insertTrie(char** documents, int lineNum){
+
+int* insertTrie(char** documents, int lineNum){
 	PostingList plist (4);
 	//print(documents, lineNum);
 	//printSplit(documents, lineNum);
@@ -160,14 +170,18 @@ void insertTrie(char** documents, int lineNum){
 	//}
 	//For each sentence we add the words
 	char * word;
+	//number of words
+	int* nwords = new int [lineNum+1]();
 	for (int i=0; i<lineNum ; i++){  //i<lineNum//2
 		cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
 		word = strtok (documents[i]," \t\n");
 		//Removed number from sentence // TODO CARE?
 		word = strtok (NULL, " \t\n");
 		while (word != NULL){
+			nwords[i]++;
+			nwords[lineNum]++; //1 more cell for sum of all cells
 			printf ("%s\n",word);
-			cout << "------------------------------------"<<numberLen(atoi(word))<<endl;			
+			cout << "------------------------------------"<<numberLen(atoi(word))<<endl;
 			llist.add(word,i);
 			word = strtok (NULL, " \t\n");
 			//break; //COMMENT IT
@@ -184,6 +198,7 @@ void insertTrie(char** documents, int lineNum){
 	//llist.printLeafs();
 	cout<<"~~~~SEARCHING "<< " red "<<"~~~~"<<endl;
 	llist.search((char*)"red");
+	return nwords;
 }
 
 void search(){
@@ -194,4 +209,12 @@ void df(){
 }
 void tf(){
 	cout << "My lovely TF" <<endl;
+}
+
+double idf(const int& n, const int& nqi ){
+	return log((n - nqi + 0.5)/(nqi + 0.5));
+}
+
+double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1 = 1.2, const double& b = 0.75){
+	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * abs(D)/avgdl)); //absolute value of D is not really needed
 }

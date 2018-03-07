@@ -32,7 +32,7 @@ class LetterList {
 public:
 	LetterList();
 	void add(char* word, int lineNum);
-	void search(char* word);
+	PostingList* search(char* word);
 	int countNodes();
 	void print();
 	void printDown();

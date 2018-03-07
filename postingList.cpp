@@ -52,6 +52,14 @@ void PostingList::print(){
 	cout << "~ totalTimes found: "<< totalTimes << " ~"<< endl;
 }
 
+int PostingList::getTotalTimes(){
+	return totalTimes;
+}
+
+int PostingList::getNumNodes(){
+	return numNodes;
+}
+
 PostingList::~PostingList(){
 	Node* temp = NULL;
 	while(head!= NULL){

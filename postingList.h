@@ -23,6 +23,9 @@ class PostingList {
 public:
 	PostingList(int line);
 	void add(int line);
+	//int getCount(int line);
+	int getTotalTimes();
+	int getNumNodes();
 	int countNodes();
 	void print();
 	~PostingList();	

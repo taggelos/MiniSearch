@@ -9,9 +9,10 @@ int main(int argc, char* argv[]){
 	int lineNum = 0;
 	char ** documents = readFile(inputFile, lineNum);
 	cout << "Please wait while your input file is being processed." <<endl;
-	//Insert
-	insertTrie(documents,lineNum);
+	//Insert in Trie and take number of words for each sentence
+	int * nwords = insertTrie(documents,lineNum);
 	cout << "Your file: '"<< inputFile <<"' was processed!"<< endl << "Type your commands.." <<endl;
+	for (int i=0;i<=lineNum;i++) cout << nwords[i] << endl; ///////FOR WARNING'S SAKE///////
 	//Read Command
 	char * cmd = NULL;
 	char * q = NULL;
@@ -38,8 +39,13 @@ int main(int argc, char* argv[]){
 		else if (!strcmp(cmd,"/tf")) tf();
 		else commandError();
 		cout <<endl<<"Type next command or '/exit' to terminate"<<endl;
+		free(mystring);
 	}
 	//Free Document
 	freeDocs(documents,lineNum);
 	exit(0);
 }
+
+/*double f = 1234.12345678;
+cout << floor(100* f)/100 <<endl;
+*/
