@@ -25,8 +25,9 @@ public:
 	void add(int line);
 	//int getCount(int line);
 	int getTotalTimes();
-	int getNumNodes();
 	int countNodes();
+	//term frequency function
+	int tf(int line);
 	void print();
 	~PostingList();	
 };

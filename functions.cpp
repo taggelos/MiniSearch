@@ -13,7 +13,7 @@ void commandError(){
 	cerr << "####################################################"<<endl;
 	cerr << "#Invalid command!" <<endl;
 	cerr << "#Available commands :\t/search q1 q2 q3 q4 ... q10" << endl;
-	cerr << "#\t\t\t" << "/df" << endl << "#\t\t\t" << "/tf" << endl << "#\t\t\t" << "/exit" << endl;			
+	cerr << "#\t\t\t" << "/df <integer> <word>" << endl << "#\t\t\t" << "/tf" << endl << "#\t\t\t" << "/exit" << endl;			
 	cerr << "####################################################"<<endl;
 }
 
@@ -124,7 +124,7 @@ void printSplit(char ** arr, const int& lineNum){
 	}
 }
 
-void freeDocs(char ** documents, const int& lineNum){
+void free2D(char ** documents, const int& lineNum){
 	for (int i=0; i < lineNum ; i++) {
 		delete[] documents[i];
 	}
@@ -143,8 +143,76 @@ int numberLen(int n, int base = 10){
 
 /******************************TRIE****************************************************/
 
-int* insertTrie(char** documents, int lineNum){
-	PostingList plist (4);
+LetterList* insertTrie(char** documents, const int& lineNum, int* nwords){
+	LetterList *llist = new LetterList;
+	//For each sentence we add the words
+	char * word;
+	//number of words
+	for (int i=0; i<lineNum ; i++){  //i<lineNum//2
+		cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
+		word = strtok (documents[i]," \t\n");
+		//Removed number from sentence
+		word = strtok (NULL, " \t\n");
+		while (word != NULL){
+			nwords[i]++;
+			printf ("%s\n",word);
+			cout << "------------------------------------"<<numberLen(atoi(word))<<endl;
+			llist->add(word,i);
+			word = strtok (NULL, " \t\n");
+		}
+		nwords[lineNum]+=nwords[i]; //1 more cell for sum of all cells
+	}	
+	return llist;
+}
+
+void search(LetterList* llist, const int& n, const int& N, int* nwords){
+	int D=0; //number of words in a document -> |D|
+	double sum=0;
+	int nqi=0; // number of sentences containing a word
+	int tf=0; // term frequency, number of a word in a sentence
+	int avgdl = nwords[N] / N; // average number of words
+	double curIdf; //IDF
+
+	//for (i in queries)
+	//for (j in documents)
+	cout<<"~~~~SEARCHING "<< " red "<<"~~~~"<<endl;
+	PostingList* plist = llist->search((char*)"red");
+	if (plist!=NULL){
+		nqi = plist->countNodes();
+		//alltf = plist->getTotalTimes();
+		//tf = plist->getCount(j);
+		//D = nwords[j];
+		curIdf= idf(N,nqi);
+		sum=score(curIdf,tf,avgdl,D);
+	}
+	//insert in heap
+
+	cout << n << sum << "<- forget them"<<endl; //n will be changed
+}
+
+void df(){
+	cout << "My lovely DF" <<endl;
+}
+
+int tf(LetterList* llist, const int& id, const char* word){
+	PostingList* plist = llist->search(word);
+	if (plist!=NULL) return plist->tf(id);
+	return 0;
+}
+
+double idf(const int& N, const int& nqi ){
+	return log((N - nqi + 0.5)/(nqi + 0.5));
+}
+
+double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
+	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
+}
+
+/*double f = 1234.12345678;
+cout << floor(100* f)/100 <<endl;
+*/
+
+/*PostingList plist (4);
 	//print(documents, lineNum);
 	//printSplit(documents, lineNum);
 	plist.add(44);
@@ -162,59 +230,4 @@ int* insertTrie(char** documents, int lineNum){
 	plist.add(478);
 	plist.add(3);
 	plist.print();
-	cout << "plist count nodes: "<<plist.countNodes()<<endl;;
-
-	LetterList llist;
-	//for (int i=0; i < lineNum ; i++){
-	//	llist.add(documents[i]);
-	//}
-	//For each sentence we add the words
-	char * word;
-	//number of words
-	int* nwords = new int [lineNum+1]();
-	for (int i=0; i<lineNum ; i++){  //i<lineNum//2
-		cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
-		word = strtok (documents[i]," \t\n");
-		//Removed number from sentence // TODO CARE?
-		word = strtok (NULL, " \t\n");
-		while (word != NULL){
-			nwords[i]++;
-			nwords[lineNum]++; //1 more cell for sum of all cells
-			printf ("%s\n",word);
-			cout << "------------------------------------"<<numberLen(atoi(word))<<endl;
-			llist.add(word,i);
-			word = strtok (NULL, " \t\n");
-			//break; //COMMENT IT
-		}
-	}
-	//llist.add(documents[0]);
-	cout<<"~~~~ALL~~~~"<<endl;
-	//llist.print();
-	cout<<"~~~~DOWN~~~~"<<endl;
-	//llist.printDown();
-	cout<<"~~~~RIGHT~~~~"<<endl;
-	//llist.printRight();
-	cout<<"~~~~LEAFS~~~~"<<endl;
-	//llist.printLeafs();
-	cout<<"~~~~SEARCHING "<< " red "<<"~~~~"<<endl;
-	llist.search((char*)"red");
-	return nwords;
-}
-
-void search(){
-	cout << "My lovely search" <<endl;
-}
-void df(){
-	cout << "My lovely DF" <<endl;
-}
-void tf(){
-	cout << "My lovely TF" <<endl;
-}
-
-double idf(const int& n, const int& nqi ){
-	return log((n - nqi + 0.5)/(nqi + 0.5));
-}
-
-double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1 = 1.2, const double& b = 0.75){
-	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * abs(D)/avgdl)); //absolute value of D is not really needed
-}
+	cout << "plist count nodes: "<<plist.countNodes()<<endl;;*/

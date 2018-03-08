@@ -39,10 +39,6 @@ void PostingList::add(int line){
 	totalTimes += 1;
 }
 
-int PostingList::countNodes(){
-	return numNodes;
-}
-
 void PostingList::print(){
 	Node* temp = head;
 	while(temp!= NULL){
@@ -56,9 +52,22 @@ int PostingList::getTotalTimes(){
 	return totalTimes;
 }
 
-int PostingList::getNumNodes(){
+
+int PostingList::countNodes(){
 	return numNodes;
 }
+
+int PostingList::tf(int line){
+	Node* temp = head;
+	while(temp!= NULL){
+		if (temp->line == line){
+			return temp->count;
+		}
+		temp = temp->next;
+	}
+	return 0;
+}
+
 
 PostingList::~PostingList(){
 	Node* temp = NULL;

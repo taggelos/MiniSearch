@@ -23,7 +23,7 @@ class LetterList {
 	int numWords; //Word counter
 	//PostingList * p; //Hashlist for end nodes of words?
 	//TODODELETE
-	struct TODODELETE{
+	struct TODODELETE {
 		Node* m;
 		TODODELETE* next;
 	};
@@ -31,8 +31,8 @@ class LetterList {
 	TODODELETE* del;
 public:
 	LetterList();
-	void add(char* word, int lineNum);
-	PostingList* search(char* word);
+	void add(const char* word, const int& lineNum);
+	PostingList* search(const char* word);
 	int countNodes();
 	void print();
 	void printDown();

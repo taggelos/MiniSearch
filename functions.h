@@ -29,18 +29,18 @@ void print(char ** arr, const int& lineNum);
 
 void printSplit(char ** arr, const int& lineNum);
 
-void freeDocs(char ** documents, const int& lineNum);
+void free2D(char ** documents, const int& lineNum);
 
 
 /******************************TRIE****************************************************/
 
-int* insertTrie(char** documents, int lineNum);
-void search();
+LetterList* insertTrie(char** documents, const int& lineNum, int* nwords);
+void search(LetterList* llist, const int& n, const int& lineNum, int* nwords);
 void df();
-void tf();
+int tf(LetterList* llist, const int& id, const char* word);
 
 double idf(const int& n, const int& nqi );
-double score(const double& idf, const int& tf, const int& avgdl, const int& D, const int& k1, const int& b);
+double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1 = 1.2, const double& b = 0.75);
 
 
 #endif

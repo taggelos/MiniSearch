@@ -37,7 +37,7 @@ LetterList::LetterList(){
 	cout << "MAH MAN-> "<<head->letter << endl;
 }
 
-void LetterList::add(char* word, int lineNum){
+void LetterList::add(const char* word, const int& lineNum){
 	Node* temp = head;
 	cout << "Splitting WORD "<< word << " into LETTERS" << endl;
 	int len = (int)strlen(word);
@@ -97,7 +97,7 @@ void LetterList::add(char* word, int lineNum){
 	numWords++;
 }
 
-PostingList* LetterList::search(char* word){
+PostingList* LetterList::search(const char* word){
 	Node* temp = head;
 	cout << "Splitting WORD "<< word << " into LETTERS" << endl;
 	int len = (int)strlen(word);
@@ -109,7 +109,7 @@ PostingList* LetterList::search(char* word){
 		}
 		if(temp->letter != word[i]){
 			cout << " NOT found NODE -> " << word[i]<<endl;
-			break;
+			return NULL;
 		}
 		else {//if (temp->letter == word[i]){
 			cout << " Same letter -> " << word[i]<<endl;
@@ -122,7 +122,6 @@ PostingList* LetterList::search(char* word){
 		cout << " AXNE -> " << word[i]<<endl;
 		if(i==len-1){
 			cout << "Last letter of word " << word[i] << "----- "<< temp->letter << "   :'("<<endl;
-			//Initialize postingList
 			if(temp->plist == NULL){
 				cout << "PROBLEM OF LEAF without postinglist"<<endl;
 			}
