@@ -16,24 +16,13 @@ LetterList::Node::Node(char l, PostingList* p){
 	plist = p;	
 }
 
-LetterList::Node* LetterList::node(char l, PostingList* p){
-	Node* kapos = new Node(l,p);	
-	/*TODODELETE * temp = new TODODELETE;
-	temp -> m = kapos;
-	temp -> next = del;
-	del = temp;*/
-	return kapos;
-}
-
 LetterList::LetterList(){
 	//head = NULL;
 	cout<<"I AM CONSTRUCTING"<<endl;
-	del = new TODODELETE;
-	del -> m = new Node('\0');
-	del -> next = NULL;
 	head = new Node('\0');
 	numNodes = 1;
 	numWords = 0;
+	maxLen = 0;
 	cout << "MAH MAN-> "<<head->letter << endl;
 }
 
@@ -41,6 +30,7 @@ void LetterList::add(const char* word, const int& lineNum){
 	Node* temp = head;
 	cout << "Splitting WORD "<< word << " into LETTERS" << endl;
 	int len = (int)strlen(word);
+	if (len > maxLen) maxLen = len;
 	for (int i=0; i < len; i++){
 		cout << " $$$$$ letter -> " << word[i]<<endl;
 		while (temp->letter != word[i] && temp->right!=NULL){
@@ -53,10 +43,24 @@ void LetterList::add(const char* word, const int& lineNum){
 			if (i!=len-1){
 				cout << " NEW NODE RIGHT and DOWN -> " << word[i+1]<<endl;
 				temp->right->down=new Node(word[i+1]);
+				//temp->right->down = new Node('\0');
+				cout << " NEXT to check -> " << word[i+1]<<endl;
+				temp = temp->right->down;
 			}
-			//temp->right->down = new Node('\0');
-			cout << " NEXT to check -> " << word[i+1]<<endl;
-			temp = temp->right->down;
+			else {
+				cout << "Last letter of word " << word[i] << "-----"<< temp->right->letter<<"  :'("<<endl;
+				//Initialize postingList
+				if(temp->right->plist == NULL){
+					cout << "Mark LEAF with postinglist"<<endl;
+					temp->right -> plist = new PostingList(lineNum);
+					temp->right->plist->print();
+				}
+				//Leaf node means we met an old word
+				else{
+					cout << "met AN OLD FRIENDOULINO!" <<endl;
+					temp->right->plist->add(lineNum);
+				}
+			}
 			numNodes++;
 		}
 		else {//if (temp->letter == word[i]){
@@ -122,7 +126,7 @@ PostingList* LetterList::search(const char* word){
 		if(i==len-1){
 			cout << "Last letter of word " << word[i] << "----- "<< temp->letter << "   :'("<<endl;
 			if(temp->plist == NULL){
-				cout << "PROBLEM OF LEAF without postinglist"<<endl;
+				cout << "PROBLEM OF LEAF without postinglist or ALMOST the word"<<endl;
 			}
 			//Leaf node means we met an old word
 			else{
@@ -133,62 +137,43 @@ PostingList* LetterList::search(const char* word){
 	return temp->plist;
 }
 
+void LetterList::findAll(){
+	Node* n = head;
+	char* word = new char[maxLen+1];
+	traverse(n,word,0);
+	cout << "ALL words-> " <<numWords<<endl;
+	delete[] word;
+}
+
+void LetterList::traverse(Node* n,char* word,int i){
+	word[i] = n->letter;
+	if(n->plist!=NULL){
+		word[i+1] = '\0';
+		cout << word << " " << n->plist->getTotalTimes() <<endl;
+	}
+	if (n->down!=NULL) traverse(n->down,word,i+1);
+	if (n->right!=NULL)	traverse(n->right,word,i);
+}
+
 
 int LetterList::countNodes(){
 	return numNodes;
-}
-
-void LetterList::printDown(){
-	Node* temp = head;
-	while(temp!= NULL){
-		cout << "node down-> Letter stored: " << temp->letter << endl;		
-		temp = temp->down;
-	}
-}
-
-void LetterList::printRight(){
-	Node* temp = head;
-	while(temp!= NULL){
-		cout << "node right-> Letter stored: " << temp->letter << endl;		
-		temp = temp->right;
-	}
-}
-
-void LetterList::print(){ //LATHOS
-	cout << "LETS PRINT"<<endl;
-	Node* temp = head;
-	int level=1;
-	while(temp->down!=NULL){		
-		cout << " LETTER -- "<<temp->down->letter<<" -- and level-> "<< level<<endl;
-		Node * temp2 = temp->down;
-		while (temp2->right!=NULL){
-			cout << " IN SAME LEVEL -- "<<level<<" -- :"<< temp2->letter<<endl;
-			temp2 = temp2->right;
-		}
-		level++;
-		temp=temp->down;
-	}
-}
-
-void LetterList::printLeafs(){
-	Node* temp = head;
-	while(temp!= NULL){
-		cout << "sad " << temp->letter<<endl;
-		if(temp->plist!=NULL) cout << "POSTING LIST IN -> " << temp->letter<<endl;	
-		temp = temp->down;
-	}
 }
 
 LetterList::Node::~Node(){
 	if (plist!=NULL) delete plist;
 }
 
+void LetterList::traverseDel(Node* n){
+	if(n->plist!=NULL){
+		cout << " Here word's last letter-> "<<n->letter<<endl;
+	}
+	else cout << n->letter;
+	if (n->right!=NULL) traverseDel(n->right);
+	if (n->down!=NULL) traverseDel(n->down);
+}
+
 LetterList::~LetterList(){
-	/*Node* temp = NULL;
-	while (del!=NULL){
-		delete del->m;
-		TODODELETE* temp = del;
-		del = del->next;		
-		delete temp;
-	}*/
+	Node* n = head;
+	traverseDel(n);
 }

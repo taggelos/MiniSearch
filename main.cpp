@@ -48,7 +48,10 @@ int main(int argc, char* argv[]){
 		if (!strcmp(mystring,"")) cmd = mystring;
 		else cmd = strtok(mystring, " ");
 		/* /exit */
-		if (!strcmp(cmd,"/exit")) break;
+		if (!strcmp(cmd,"/exit")) {
+			delete mystring;
+			break;
+		}
 		/* /search */
 		else if (!strcmp(cmd,"/search")) {
 			q = strtok (NULL, " \t");
@@ -62,8 +65,6 @@ int main(int argc, char* argv[]){
 			}
 			if (n==0) cerr << "Provide at least 1 argument for search!" <<endl;
 			else wlist.print(); //wlist.//search(llist,lineNum,nwords); //list of queries? anti to n
-			// Try again
-			continue;
 		}
 		/* /df */
 		else if (!strcmp(cmd,"/df")) {
@@ -92,12 +93,8 @@ int main(int argc, char* argv[]){
 					}
 					delete param;
 				}
-				else {
-					cout << "null param"<<endl;
-				}
+				else llist->findAll();
 			}
-			// Try again
-			continue;
 		}
 		/* /tf */
 		else if (!strcmp(cmd,"/tf")) {
@@ -132,14 +129,11 @@ int main(int argc, char* argv[]){
 					if(argLine >= lineNum || argLine < 0 ) cerr << "Not a valid line number!" << endl;
 					else cout << params[0] << " " << params[1] << " " << tf(llist,argLine,params[1]) << endl;
 					free2D(params,2);
-			}			
-			// Try again
-			continue;
+			}
 		}
 		//Wrong Command
 		else commandError();
 		cout <<endl<<"Type next command or '/exit' to terminate"<<endl;
-		free(mystring);
 	}
 	//Free Document
 	free2D(documents,lineNum);

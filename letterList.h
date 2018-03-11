@@ -21,23 +21,15 @@ class LetterList {
 	Node* head;
 	int numNodes; //Node (Letter) counter with root node inside
 	int numWords; //Word counter
-	//PostingList * p; //Hashlist for end nodes of words?
-	//TODODELETE
-	struct TODODELETE {
-		Node* m;
-		TODODELETE* next;
-	};
-	Node* node(char letter, PostingList* plist = NULL);
-	TODODELETE* del;
+	int maxLen; // Maximum length of word
 public:
 	LetterList();
 	void add(const char* word, const int& lineNum);
 	PostingList* search(const char* word);
+	void findAll();
+	void traverse(Node* n,char* word,int i);
 	int countNodes();
-	void print();
-	void printDown();
-	void printRight();
-	void printLeafs();
+	void traverseDel(Node* n);
 	~LetterList();	
 };
 
