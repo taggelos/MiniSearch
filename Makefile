@@ -1,14 +1,16 @@
-CPP = g++ -Wall -Wextra -Wconversion -g
+CPP = g++ -Wall -Wextra -Wconversion -g -lm
 OUT = minisearch
 DATA = document.txt
-SOURCE = main.cpp functions.cpp postingList.cpp letterList.cpp
-OBJS = main.o functions.o postingList.o letterList.o
+OBJS = main.o functions.o wordList.o postingList.o heap.o letterList.o
 
-all: $(OBJS)
-	$(CPP) $(OBJS) -o $(OUT)
+$(OUT): $(OBJS)
+	$(CPP) $^ -o $@
 
-$(OBJS): $(SOURCE) $(HEADER)
-	$(CPP) -c $(SOURCE)
+%.o: %.cpp %.h
+	$(CPP) -c $<
+
+%.o: %.cpp
+	$(CPP) -c $<
 
 run:
 	./$(OUT) -i $(DATA)

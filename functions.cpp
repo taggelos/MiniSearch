@@ -10,11 +10,11 @@ void paramError(char * programName ,const char * reason){
 }
 
 void commandError(){
-	cerr << "####################################################"<<endl;
+	cerr << "##############################################################"<<endl;
 	cerr << "#Invalid command!" <<endl;
-	cerr << "#Available commands :\t/search q1 q2 q3 q4 ... q10" << endl;
-	cerr << "#\t\t\t" << "/df <integer> <word>" << endl << "#\t\t\t" << "/tf" << endl << "#\t\t\t" << "/exit" << endl;			
-	cerr << "####################################################"<<endl;
+	cerr << "#Available commands :\t/search <q1> <q2> <q3> <q4> ... <q10>" << endl;
+	cerr << "#\t\t\t" << "/df or /df <word>" << endl << "#\t\t\t" << "/tf <integer> <word>" << endl << "#\t\t\t" << "/exit" << endl;			
+	cerr << "##############################################################"<<endl;
 }
 
 bool numberCheck(char *str){
@@ -165,33 +165,9 @@ LetterList* insertTrie(char** documents, const int& lineNum, int* nwords){
 	return llist;
 }
 
-void search(LetterList* llist, const int& n, const int& N, int* nwords){
-	int D=0; //number of words in a document -> |D|
-	double sum=0;
-	int nqi=0; // number of sentences containing a word
-	int tf=0; // term frequency, number of a word in a sentence
-	int avgdl = nwords[N] / N; // average number of words
-	double curIdf; //IDF
-
-	//for (i in queries)
-	//for (j in documents)
-	cout<<"~~~~SEARCHING "<< " red "<<"~~~~"<<endl;
-	PostingList* plist = llist->search((char*)"red");
-	if (plist!=NULL){
-		nqi = plist->countNodes();
-		//alltf = plist->getTotalTimes();
-		//tf = plist->getCount(j);
-		//D = nwords[j];
-		curIdf= idf(N,nqi);
-		sum=score(curIdf,tf,avgdl,D);
-	}
-	//insert in heap
-
-	cout << n << sum << "<- forget them"<<endl; //n will be changed
-}
-
 void df(){
-	cout << "My lovely DF" <<endl;
+	cout << "My lovely DF" <<endl;	
+	//alltf = plist->getTotalTimes();
 }
 
 int tf(LetterList* llist, const int& id, const char* word){
@@ -200,34 +176,6 @@ int tf(LetterList* llist, const int& id, const char* word){
 	return 0;
 }
 
-double idf(const int& N, const int& nqi ){
-	return log((N - nqi + 0.5)/(nqi + 0.5));
-}
-
-double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
-	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
-}
-
 /*double f = 1234.12345678;
 cout << floor(100* f)/100 <<endl;
 */
-
-/*PostingList plist (4);
-	//print(documents, lineNum);
-	//printSplit(documents, lineNum);
-	plist.add(44);
-	plist.add(3);
-	plist.add(223);
-	plist.add(3);
-	plist.add(3221);
-	plist.add(3221);
-	plist.add(3221);
-	plist.add(3221);
-	plist.add(3221);
-	plist.add(3221);
-	plist.add(478);
-	plist.add(478);
-	plist.add(478);
-	plist.add(3);
-	plist.print();
-	cout << "plist count nodes: "<<plist.countNodes()<<endl;;*/

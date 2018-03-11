@@ -74,7 +74,6 @@ void LetterList::add(const char* word, const int& lineNum){
 				cout << " NEXT to check -> " << word[i+1]<<endl;
 			}
 			else{
-				cout << "O FUCK "<<endl;
 				cout << "Last letter of word " << word[i] << "-----"<< temp->letter<<"  :'("<<endl;
 				//Initialize postingList
 				if(temp->plist == NULL){

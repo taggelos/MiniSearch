@@ -17,24 +17,18 @@ PostingList::PostingList(int line){
 
 void PostingList::add(int line){
 	Node* temp = head;
-	bool found = false;
-	while(temp!= NULL){
+	while(1){
 		if (temp->line == line) {
-			found = true;
 			temp->count++;
 			break;
 		}
-		temp = temp->next;
-	}
-	if (!found){
-		Node* n = new Node(line);
-		temp = head;
-		// O(1) to be changed
-		while(temp->next != NULL){
-			temp = temp->next;
+		if (temp->next==NULL){
+			Node* n = new Node(line);
+			temp->next = n;
+			numNodes++;
+			break;
 		}
-		temp->next = n;
-		numNodes++;
+		temp = temp->next;
 	}
 	totalTimes += 1;
 }
@@ -42,7 +36,7 @@ void PostingList::add(int line){
 void PostingList::print(){
 	Node* temp = head;
 	while(temp!= NULL){
-		cout << "node-> Number of line: " << temp->line << " Times found: "<< temp->count<< endl;		
+		cout << "node-> Number of line: " << temp->line << " Times found: "<< temp->count<< endl;
 		temp = temp->next;
 	}
 	cout << "~ totalTimes found: "<< totalTimes << " ~"<< endl;
@@ -52,10 +46,35 @@ int PostingList::getTotalTimes(){
 	return totalTimes;
 }
 
+void PostingList::score(double* bm25, int avgdl, int N, int* nwords){
+	int D=0;
+	//IDF
+	double curIdf;
+	Node* temp = head;
+	while(temp!= NULL){
+		curIdf= idf(N,numNodes);
+		//number of words in a document -> |D|
+		D = nwords[temp->line];
+		// term frequency is temp->count
+		bm25[temp->line]+=fscore(curIdf,temp->count,avgdl,D);
+		temp = temp->next;
+	}
 
-int PostingList::countNodes(){
-	return numNodes;
 }
+
+
+double PostingList::idf(const int& N, const int& nqi ){
+	return log((N - nqi + 0.5)/(nqi + 0.5));
+}
+
+double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
+	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
+}
+
+
+//int PostingList::countNodes(){
+//	return numNodes;
+//}
 
 int PostingList::tf(int line){
 	Node* temp = head;

@@ -6,9 +6,9 @@
 #include <cstring>
 #include <ctype.h>
 //#include <cstdio>
-#include <math.h> //log //floor
 #include "postingList.h"
 #include "letterList.h"
+#include "wordList.h"
 
 using namespace std;
 
@@ -35,12 +35,7 @@ void free2D(char ** documents, const int& lineNum);
 /******************************TRIE****************************************************/
 
 LetterList* insertTrie(char** documents, const int& lineNum, int* nwords);
-void search(LetterList* llist, const int& n, const int& lineNum, int* nwords);
 void df();
 int tf(LetterList* llist, const int& id, const char* word);
-
-double idf(const int& n, const int& nqi );
-double score(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1 = 1.2, const double& b = 0.75);
-
 
 #endif
