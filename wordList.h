@@ -3,6 +3,7 @@
 #include "postingList.h"
 #include "letterList.h"
 #include <math.h> //log //floor
+#include <cstring> //strcpy
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class WordList {
 		char* word;
 		Node* next;
 		Node(char* word);
+		~Node();
 	};
 	Node* head;
 	//Number of Nodes (Lines or Queries)

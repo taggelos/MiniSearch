@@ -52,7 +52,7 @@ void LetterList::add(const char* word, const int& lineNum){
 				//Initialize postingList
 				if(temp->right->plist == NULL){
 					cout << "Mark LEAF with postinglist"<<endl;
-					temp->right -> plist = new PostingList(lineNum);
+					temp->right->plist = new PostingList(lineNum);
 					temp->right->plist->print();
 				}
 				//Leaf node means we met an old word
@@ -164,13 +164,10 @@ LetterList::Node::~Node(){
 	if (plist!=NULL) delete plist;
 }
 
-void LetterList::traverseDel(Node* n){
-	if(n->plist!=NULL){
-		cout << " Here word's last letter-> "<<n->letter<<endl;
-	}
-	else cout << n->letter;
+void LetterList::traverseDel(Node* n){	
 	if (n->right!=NULL) traverseDel(n->right);
 	if (n->down!=NULL) traverseDel(n->down);
+	delete n; 
 }
 
 LetterList::~LetterList(){

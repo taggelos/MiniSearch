@@ -54,7 +54,7 @@ char** readFile(char* myFile, int &lines){
 		//Rest of Lines
 		for (int i=1; i<lines;i++){
 			//Reinitialize
-			mystring = NULL;
+			char * mystring = NULL;
 			n = 0;
 			getline(&mystring, &n, file);
 			documents[i] = new char[strlen(mystring)+1];
@@ -67,6 +67,7 @@ char** readFile(char* myFile, int &lines){
 			}
 			free(mystring);
 		}
+		free(mystring);
 		fclose (file);
 		return documents;
 	}
@@ -116,10 +117,10 @@ void printSplit(char ** arr, const int& lineNum){
 	char * pch;
 	for (int i=0; i < lineNum ; i++){
 		cout << "Splitting string "<< arr[i] << " into tokens:" << endl;
-		pch = strtok (arr[i]," \t\n");
+		pch = strtok(arr[i]," \t\n");
 		while (pch != NULL){
 			printf ("%s\n",pch);
-			pch = strtok (NULL, " \t\n");
+			pch = strtok(NULL, " \t\n");
 		}
 	}
 }
@@ -130,7 +131,6 @@ void free2D(char ** documents, const int& lineNum){
 	}
 	delete[] documents;
 }
-
 
 int numberLen(int n, int base = 10){
 	int count = 0;
@@ -150,24 +150,101 @@ LetterList* insertTrie(char** documents, const int& lineNum, int* nwords){
 	//number of words
 	for (int i=0; i<lineNum ; i++){  //i<lineNum//2
 		cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
-		word = strtok (documents[i]," \t\n");
+		word = strtok(documents[i]," \t\n");
 		//Removed number from sentence
-		word = strtok (NULL, " \t\n");
+		word = strtok(NULL, " \t\n");
 		while (word != NULL){
 			nwords[i]++;
 			printf ("%s\n",word);
 			cout << "------------------------------------"<<numberLen(atoi(word))<<endl;
 			llist->add(word,i);
-			word = strtok (NULL, " \t\n");
+			word = strtok(NULL, " \t\n");
 		}
-		nwords[lineNum]+=nwords[i]; //1 more cell for sum of all cells
+		//1 more cell for sum of all cells
+		nwords[lineNum]+=nwords[i];
 	}	
 	return llist;
 }
 
-void df(){
-	cout << "My lovely DF" <<endl;	
-	//alltf = plist->getTotalTimes();
+void search(){
+	char * q = strtok(NULL, " \t");
+	int n=0; //number of queries
+	WordList wlist; //it is ok
+	while(q != NULL && n<10){
+		cout << "My lovely q -> "<< q <<endl;
+		wlist.add(q);
+		q = strtok(NULL, " \t");
+		n++;
+	}
+	if (n==0) cerr << "Provide at least 1 argument for search!" <<endl;
+	else wlist.print(); //wlist.//search(llist,lineNum,nwords); //list of queries? anti to n
+}
+
+void df(LetterList* llist){
+	char * q = strtok(NULL, " \t");
+	int n=0;
+	char* param=NULL;
+	//take 0 or 1 arguments
+	while(q != NULL && n<=1){
+		if(n==0){
+			param = new char[strlen(q)+1];
+			strcpy(param,q);
+		}		
+		q = strtok(NULL, " \t");
+		n++;
+	}
+	if (n==2) cerr << "Provide at most 1 argument to search!" <<endl;
+	else {
+		if (param!=NULL){
+			PostingList* plist = llist->search(param);
+			if (plist!=NULL) cout << param << " " << plist->getTotalTimes() <<endl;
+			else cout << "The word was not found." <<endl;
+		}
+		else llist->findAll();
+	}
+	delete[] param;
+}
+
+void tf(LetterList* llist, int lineNum){
+	char * q = strtok(NULL, " \t");
+	//number of parameters (id,word)
+	int n=0; 
+	char** params = new char*[2];
+	while(q != NULL && n<=2){
+		cout << "hi"<<endl;
+		//Do not violate allocated array with more arguments
+		if (n!=2) {
+			params[n] = new char[strlen(q)+1];
+			strcpy(params[n],q);
+		}
+		q = strtok(NULL, " \t");
+		n++;
+	}
+	switch (n){
+		case 0: 
+			cerr << "2 arguments needed, 0 provided!" << endl;
+			delete[] params;
+			break;
+		case 1:	
+			cerr << "Need 1 more argument!" << endl;
+			delete[] params[0];
+			delete[] params;
+			break;
+		case 3:	
+			cerr << "Provide no more than 2 arguments for search!" << endl;
+			free2D(params,2);
+			break;
+		default: 
+			if(!numberCheck(params[0]))	{
+				cerr << "1st argument must be an integer!" << endl;
+				free2D(params,2);
+				break;
+			}
+			int argLine  = atoi(params[0]);
+			if(argLine >= lineNum || argLine < 0 ) cerr << "Not a valid line number!" << endl;
+			else cout << params[0] << " " << params[1] << " " << tf(llist,argLine,params[1]) << endl;
+			free2D(params,2);
+	}
 }
 
 int tf(LetterList* llist, const int& id, const char* word){

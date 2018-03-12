@@ -5,7 +5,12 @@ using namespace std;
 
 WordList::Node::Node(char* w){
 	next = NULL;
-	word = w;
+	word = new char[strlen(w)+1];
+	strcpy(word,w);
+}
+
+WordList::Node::~Node(){
+	delete[] word;
 }
 
 WordList::WordList(){

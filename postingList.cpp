@@ -62,7 +62,6 @@ void PostingList::score(double* bm25, int avgdl, int N, int* nwords){
 
 }
 
-
 double PostingList::idf(const int& N, const int& nqi ){
 	return log((N - nqi + 0.5)/(nqi + 0.5));
 }
@@ -70,11 +69,6 @@ double PostingList::idf(const int& N, const int& nqi ){
 double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
 	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
 }
-
-
-//int PostingList::countNodes(){
-//	return numNodes;
-//}
 
 int PostingList::tf(int line){
 	Node* temp = head;
@@ -86,7 +80,6 @@ int PostingList::tf(int line){
 	}
 	return 0;
 }
-
 
 PostingList::~PostingList(){
 	Node* temp = NULL;

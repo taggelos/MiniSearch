@@ -24,7 +24,6 @@ void Heap::add(int id, int score){
 	}
 	array[i]=n;
 	numNodes++;
-	cout << n << "<-array[0]"<<endl;
 }
 
 HeapNode* Heap::popMax(){
@@ -62,8 +61,7 @@ int Heap::right(int i){
 	return (2*i + 2);
 }
 
-void Heap::swap(HeapNode **x, HeapNode **y)
-{
+void Heap::swap(HeapNode **x, HeapNode **y){
 	HeapNode* temp = *x;
 	*x = *y;
 	*y = temp;
@@ -74,5 +72,8 @@ int Heap::countNodes(){
 }
 
 Heap::~Heap(){
-
+	for (int i=0; i < numNodes ; i++) {
+		delete array[i];
+	}
+	delete[] array;
 }

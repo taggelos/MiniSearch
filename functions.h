@@ -35,7 +35,9 @@ void free2D(char ** documents, const int& lineNum);
 /******************************TRIE****************************************************/
 
 LetterList* insertTrie(char** documents, const int& lineNum, int* nwords);
-void df();
+void search();
+void df(LetterList* llist);
+void tf(LetterList* llist, int lineNum);
 int tf(LetterList* llist, const int& id, const char* word);
 
 #endif
