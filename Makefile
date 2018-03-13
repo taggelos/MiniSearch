@@ -1,7 +1,7 @@
 CPP = g++ -Wall -Wextra -Wconversion -g -lm
 OUT = minisearch
-DATA = document.txt
-OBJS = main.o functions.o wordList.o postingList.o heap.o letterList.o
+DATA = Entertainment.txt
+OBJS = main.o fileUtil.o trieUtil.o wordList.o postingList.o heap.o trie.o
 
 $(OUT): $(OBJS)
 	$(CPP) $^ -o $@

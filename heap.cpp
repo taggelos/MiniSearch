@@ -9,7 +9,7 @@ Heap::Heap(int s){
 	numNodes = 0;
 }
 
-void Heap::add(int id, int score){
+void Heap::add(int id, double score){
 	if(size==numNodes){
 		cerr << "Heap failed!" <<endl;
 		return;
@@ -18,6 +18,7 @@ void Heap::add(int id, int score){
 	n->id = id;
 	n->score = score;
 	int i = numNodes;
+	//finding max
 	while (i!=0 && array[parent(i)]->score < n->score){
 		array[i]=array[parent(i)];
 		i=parent(i);
@@ -27,14 +28,18 @@ void Heap::add(int id, int score){
 }
 
 HeapNode* Heap::popMax(){
+	if(numNodes==0) return NULL;
 	HeapNode* root= array[0];
 	HeapNode* last = array[numNodes-1];
-	int i = 0; //parent
-	int l = 1; //left
+	//parent
+	int i = 0;
+	//left
+	int l = 1;
 	numNodes--;
 	while(l<numNodes){
 		int r = l+1;
 		int max = l;
+		//Find max value
 		if(r<numNodes && array[r]->score > array[l]->score){
 			max = r;
 		}
@@ -61,18 +66,8 @@ int Heap::right(int i){
 	return (2*i + 2);
 }
 
-void Heap::swap(HeapNode **x, HeapNode **y){
-	HeapNode* temp = *x;
-	*x = *y;
-	*y = temp;
-}
-
-int Heap::countNodes(){
-	return numNodes;
-}
-
 Heap::~Heap(){
-	for (int i=0; i < numNodes ; i++) {
+	for (int i=0; i < numNodes ; i++){
 		delete array[i];
 	}
 	delete[] array;

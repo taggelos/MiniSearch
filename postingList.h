@@ -21,7 +21,7 @@ class PostingList {
 	int numNodes;
 	//Total times the word was found
 	int totalTimes;
-	double idf(const int& n, const int& nqi );
+	double idf(const int& n, const int& nqi);
 	double fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1 = 1.2, const double& b = 0.75);
 public:
 	PostingList(int line);

@@ -1,9 +1,16 @@
 // Header --> Functions Declarations
 #include <iostream>
 #include "postingList.h"
-#include "letterList.h"
+#include "trie.h"
 #include <math.h> //log //floor
 #include <cstring> //strcpy
+#include <iomanip> //precision
+
+//ioctl
+#include <cstdio>
+#include <sys/ioctl.h>
+
+#include "heap.h"
 
 using namespace std;
 
@@ -25,7 +32,7 @@ public:
 	void add(char* word);
 	int countNodes();
 	void print();
-	void search(LetterList* llist, const int& N, int* nwords);
+	void search(Trie* trie, const int& N, const int& K, char** documents, int* nwords);
 	~WordList();	
 };
 

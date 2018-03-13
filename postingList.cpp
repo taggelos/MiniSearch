@@ -36,10 +36,10 @@ void PostingList::add(int line){
 void PostingList::print(){
 	Node* temp = head;
 	while(temp!= NULL){
-		cout << "node-> Number of line: " << temp->line << " Times found: "<< temp->count<< endl;
+		//cout << "node-> Number of line: " << temp->line << " Times found: "<< temp->count<< endl;
 		temp = temp->next;
 	}
-	cout << "~ totalTimes found: "<< totalTimes << " ~"<< endl;
+	//cout << "~ totalTimes found: "<< totalTimes << " ~"<< endl;
 }
 
 int PostingList::getTotalTimes(){
@@ -67,6 +67,7 @@ double PostingList::idf(const int& N, const int& nqi ){
 }
 
 double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
+	//return only 4 digits after comma
 	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
 }
 

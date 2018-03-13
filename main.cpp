@@ -1,30 +1,7 @@
-#include "functions.h"
+#include "trieUtil.h"
 #include "heap.h"
 
-/*void test(){
-	WordList wlist ("axne");
-	wlist.add("wldsa"); 
-	wlist.add("asad"); 
-	wlist.add("wlqwerwqdsa"); 
-	wlist.print(); 
-	exit(0);
-}*/
-
-/*void test(){
-	Heap h(11);
-	h.add(3,1);
-	h.add(4,7);
-	h.add(5,3);
-	cout<< "axne "<<endl;
-	HeapNode* hn = h.popMax();
-	cout<< "23e32 "<<endl;
-	cout << hn->score<<endl;
-	delete hn;
-}*/
-
 int main(int argc, char* argv[]){
-	//test();
-	//exit(0);
 	char* inputFile = NULL;	
 	//Use by default 10 as number of results (piazza)
 	int topK = 10;	
@@ -33,40 +10,39 @@ int main(int argc, char* argv[]){
 	char ** documents = readFile(inputFile, lineNum);
 	cout << "Please wait while your input file is being processed." <<endl;
 	//Insert in Trie and take number of words for each sentence
-	int * nwords = new int [lineNum+1]();
-	LetterList *llist = insertTrie(documents,lineNum,nwords);
+	int *nwords = new int [lineNum+1]();
+	Trie *trie = insertTrie(documents,lineNum,nwords);
 	cout << "Your file: '"<< inputFile <<"' was processed!"<< endl << "Type your commands.." <<endl;
 	//Read Command
-	char * cmd;
-	char * mystring = NULL;
+	char *cmd;
+	char *mystring = NULL;
+	size_t s = 0;
 	while(1){
-		size_t s = 0;
 		getline(&mystring, &s, stdin);
-		//delete \n
+		//Delete \n
 		mystring[strlen(mystring)-1]= '\0';
 		//Handle enter
 		if (!strcmp(mystring,"")) cmd = mystring;
 		else cmd = strtok(mystring, " ");
 		/* /exit */
-		if (!strcmp(cmd,"/exit")) {
-			free(mystring);
+		if (!strcmp(cmd,"/exit")){
 			break;
 		}
 		/* /search */
-		else if (!strcmp(cmd,"/search")) search();
+		else if (!strcmp(cmd,"/search")) search(trie, lineNum, topK, documents, nwords);
 		/* /df */
-		else if (!strcmp(cmd,"/df")) df(llist);
+		else if (!strcmp(cmd,"/df")) df(trie);
 		/* /tf */
-		else if (!strcmp(cmd,"/tf")) tf(llist,lineNum);
+		else if (!strcmp(cmd,"/tf")) tf(trie,lineNum);
 		//Wrong Command
 		else commandError();
-		cout <<endl<<"Type next command or '/exit' to terminate"<<endl;
-		free(mystring);
+		cout <<endl<<"Type next command or '/exit' to terminate"<<endl;		
 	}
+	if(mystring!=NULL) free(mystring);
 	//Delete nwords
 	delete[] nwords;
 	//Delete trie
-	delete llist;
+	delete trie;
 	//Free Document
 	free2D(documents,lineNum);
 	exit(0);
