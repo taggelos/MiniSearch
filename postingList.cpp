@@ -46,7 +46,7 @@ int PostingList::getTotalTimes(){
 	return totalTimes;
 }
 
-void PostingList::score(double* bm25, int avgdl, int N, int* nwords){
+void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords){
 	int D=0;
 	//IDF
 	double curIdf;
@@ -57,6 +57,7 @@ void PostingList::score(double* bm25, int avgdl, int N, int* nwords){
 		D = nwords[temp->line];
 		// term frequency is temp->count
 		bm25[temp->line]+=fscore(curIdf,temp->count,avgdl,D);
+		flags[temp->line] = true;
 		temp = temp->next;
 	}
 

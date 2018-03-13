@@ -21,7 +21,7 @@ Trie* insertTrie(char** documents, const int& lineNum, int* nwords){
 		//1 more cell for sum of all cells
 		nwords[lineNum]+=nwords[i];
 		delete[] templine;
-	}	
+	}
 	return trie;
 }
 

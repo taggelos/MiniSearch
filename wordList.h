@@ -33,7 +33,13 @@ public:
 	int countNodes();
 	void print();
 	void search(Trie* trie, const int& N, const int& K, char** documents, int* nwords);
+	void printSpaces(int num);
+	void specialPrint(int i, HeapNode* hn, char * underline, char* original);
+	char* fillWhiteSpace(char* line, size_t num);
+	void replace(char* original, char* underline, char* word);
+	char* createUnderLine(char* original);
 	~WordList();	
 };
+
 
 #endif

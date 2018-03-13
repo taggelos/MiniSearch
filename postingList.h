@@ -28,7 +28,7 @@ public:
 	void add(int line);
 	int getTotalTimes();
 	//int countNodes();
-	void score(double* bm25, int avgdl, int N, int* nwords);
+	void score(double* bm25, bool* flags, int avgdl, int N, int* nwords);
 	//term frequency function
 	int tf(int line);
 	void print();
