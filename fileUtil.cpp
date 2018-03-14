@@ -46,7 +46,7 @@ char** readFile(char* myFile, int &lines){
 		size_t n = 0;
 		for (int i=0; i<lines;i++){
 			ssize_t size = getline(&mystring, &n, file);
-			mystring[size-1]='\0';
+			if(mystring[size-1]=='\n') mystring[size-1]='\0';
 			char *token = strtok(mystring," \t");
 			//For first character of first line we check without using atoi
 			if (token==NULL || !numberCheck(token) || atoi(mystring)!=i ) {

@@ -41,18 +41,13 @@ void Trie::add(const char* word, const int& lineNum){
 		}
 		if(temp->letter != word[i]){
 			//New right Node
-			temp->right=new Node(word[i]);
+			temp->right = new Node(word[i]);
 			if (i!=len-1){
 				temp->right->down=new Node(word[i+1]);
 				temp = temp->right->down;
 			}
-			//Last letter of word
-			else {
-				//Mark Leaf with PostingList if it does not exist
-				if(temp->right->plist == NULL) temp->right->plist = new PostingList(lineNum);
-				//Leaf node means we met an old word
-				else temp->right->plist->add(lineNum);
-			}
+			//Last letter of word marked with Posting List
+			else temp->right->plist = new PostingList(lineNum);
 			//Count the new Node we created
 			numNodes++;
 		}
