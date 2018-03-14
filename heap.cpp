@@ -18,12 +18,13 @@ void Heap::add(int id, double score){
 	n->id = id;
 	n->score = score;
 	int i = numNodes;
-	//finding max
+	//Finding the right level for our new Node
 	while (i!=0 && array[parent(i)]->score < n->score){
 		array[i]=array[parent(i)];
 		i=parent(i);
 	}
 	array[i]=n;
+	//Count the new node
 	numNodes++;
 }
 
@@ -43,6 +44,7 @@ HeapNode* Heap::popMax(){
 		if(r<numNodes && array[r]->score > array[l]->score){
 			max = r;
 		}
+		//And set it
 		if (array[max]->score > last->score){
 			array[i] = array[max];
 			i = max;
@@ -54,18 +56,22 @@ HeapNode* Heap::popMax(){
 	return root;
 }
 
+//The parent node, as stored in array
 int Heap::parent(int i){
 	return (i-1)/2;
 }
 
+//The left one
 int Heap::left(int i){
 	return (2*i + 1);
 }
 
+//And the right one
 int Heap::right(int i){
 	return (2*i + 2);
 }
 
+//Destructor of our array with the values
 Heap::~Heap(){
 	for (int i=0; i < numNodes ; i++){
 		delete array[i];

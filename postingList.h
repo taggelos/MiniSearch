@@ -31,7 +31,6 @@ public:
 	void score(double* bm25, bool* flags, int avgdl, int N, int* nwords);
 	//term frequency function
 	int tf(int line);
-	void print();
 	~PostingList();	
 };
 

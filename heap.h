@@ -5,6 +5,7 @@ using namespace std;
 #ifndef HEAP_H
 #define HEAP_H
 
+//Publicly Visible so as to access the values easily
 struct HeapNode {
 	//Number of file line
 	int id;

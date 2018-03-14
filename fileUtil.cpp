@@ -9,6 +9,7 @@ void paramError(char * programName ,const char * reason){
 	exit(1);
 }
 
+//Print Format when problem with command occurs
 void commandError(){
 	cerr << "##############################################################"<<endl;
 	cerr << "#Invalid command!" <<endl;
@@ -17,6 +18,7 @@ void commandError(){
 	cerr << "##############################################################"<<endl;
 }
 
+//Check string if it is number
 bool numberCheck(char *str){
 	int len = (int)strlen(str);
 	//In case there is a letter with the number and atoi clears it
@@ -25,6 +27,7 @@ bool numberCheck(char *str){
 	return true;
 }
 
+//Read input File
 char** readFile(char* myFile, int &lines){
 	FILE * file;
 	lines = 0;
@@ -59,6 +62,7 @@ char** readFile(char* myFile, int &lines){
 	}
 }
 
+//Check the arguments given by the user
 void inputCheck(int argc, char* argv[], char*& inputFile, int& topK){
 	if (argc == 3){
 		if (strcmp(argv[1],"-i")) {
@@ -90,18 +94,10 @@ void inputCheck(int argc, char* argv[], char*& inputFile, int& topK){
 	cout << "Arguments taken : " << inputFile << " " << topK << endl;
 }
 
+//Free a 2D array knowing its size with lineNum
 void free2D(char ** documents, const int& lineNum){
 	for (int i=0; i < lineNum ; i++) {
 		delete[] documents[i];
 	}
 	delete[] documents;
-}
-
-int numberLen(int n, int base = 10){
-	int count = 0;
-	do {
-		count++; 
-		n /= base;
-	} while (n);
-	return count;
 }

@@ -4,12 +4,14 @@
 using namespace std;
 
 PostingList::Node::Node(int l){
+	//Initialisation
 	next = NULL;
 	line= l;
 	count= 1;
 }
 
 PostingList::PostingList(int line){
+	//Initialise our first Node, head
 	head = new Node(line);
 	numNodes = 1;
 	totalTimes = 1;
@@ -18,28 +20,22 @@ PostingList::PostingList(int line){
 void PostingList::add(int line){
 	Node* temp = head;
 	while(1){
+		//If there is same line again, add that we found the word
 		if (temp->line == line) {
 			temp->count++;
 			break;
 		}
+		//If we meet the word in the line for the first time
 		if (temp->next==NULL){
 			Node* n = new Node(line);
 			temp->next = n;
 			numNodes++;
 			break;
 		}
+		//Keep searching in our List
 		temp = temp->next;
 	}
 	totalTimes += 1;
-}
-
-void PostingList::print(){
-	Node* temp = head;
-	while(temp!= NULL){
-		//cout << "node-> Number of line: " << temp->line << " Times found: "<< temp->count<< endl;
-		temp = temp->next;
-	}
-	//cout << "~ totalTimes found: "<< totalTimes << " ~"<< endl;
 }
 
 int PostingList::getTotalTimes(){
@@ -48,14 +44,14 @@ int PostingList::getTotalTimes(){
 
 void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords){
 	int D=0;
-	//IDF
+	//Idf
 	double curIdf;
 	Node* temp = head;
 	while(temp!= NULL){
 		curIdf= idf(N,numNodes);
-		//number of words in a document -> |D|
+		//Number of words in a document -> |D|
 		D = nwords[temp->line];
-		// term frequency is temp->count
+		//Term frequency is temp->count
 		bm25[temp->line]+=fscore(curIdf,temp->count,avgdl,D);
 		flags[temp->line] = true;
 		temp = temp->next;
@@ -63,15 +59,18 @@ void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords
 
 }
 
+//Idf
 double PostingList::idf(const int& N, const int& nqi ){
 	return log((N - nqi + 0.5)/(nqi + 0.5));
 }
 
+//Score type
 double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
 	//return only 4 digits after comma
 	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
 }
 
+//Term Frequency
 int PostingList::tf(int line){
 	Node* temp = head;
 	while(temp!= NULL){
@@ -83,6 +82,7 @@ int PostingList::tf(int line){
 	return 0;
 }
 
+//Destructor
 PostingList::~PostingList(){
 	Node* temp = NULL;
 	while(head!= NULL){

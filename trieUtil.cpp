@@ -8,13 +8,13 @@ Trie* insertTrie(char** documents, const int& lineNum, int* nwords){
 	char * templine;
 	//For each sentence we add the words
 	for (int i=0; i<lineNum ; i++){
-		//cout << "Splitting LINE "<< documents[i] << " into WORDS:" << endl;
+		//Splitting line into words
 		templine = new char [strlen(documents[i])+1];
 		strcpy(templine,documents[i]);
 		word = strtok(templine," \t");
 		while (word != NULL){
 			nwords[i]++;
-			//cout << "------------------------------------"<<numberLen(atoi(word))<<endl;
+			//insert the word
 			trie->add(word,i);
 			word = strtok(NULL, " \t");
 		}
@@ -27,16 +27,20 @@ Trie* insertTrie(char** documents, const int& lineNum, int* nwords){
 
 void search(Trie* trie, const int& lineNum, const int& K, char** documents, int* nwords){
 	char * q = strtok(NULL, " \t");
-	//number of queries
+	//Number of queries
 	int n=0;
 	WordList wlist;
+	//Take at maximum 10 queries
 	while(q != NULL && n<10){
+		//Add queries in a word list
 		wlist.add(q);
 		q = strtok(NULL, " \t");
 		n++;
 	}
+	//If no arguments print error
 	if (n==0) cerr << "Provide at least 1 argument for search!" <<endl;
-	else wlist.search(trie,lineNum, K, documents, nwords);
+	//Search for every query given
+	else wlist.search(trie, lineNum, K, documents, nwords);
 }
 
 void df(Trie* trie){
@@ -52,13 +56,17 @@ void df(Trie* trie){
 		q = strtok(NULL, " \t");
 		n++;
 	}
+	//For more arguments print error
 	if (n==2) cerr << "Provide at most 1 argument to search!" <<endl;
 	else {
+		//Df with specific parameter
 		if (param!=NULL){
+			//Search for the specific word
 			PostingList* plist = trie->search(param);
 			if (plist!=NULL) cout << param << " " << plist->getTotalTimes() <<endl;
 			else cout << "The word was not found." <<endl;
 		}
+		//Df with no parameters
 		else trie->findAll();
 	}
 	delete[] param;
@@ -79,32 +87,39 @@ void tf(Trie* trie, int lineNum){
 		n++;
 	}
 	switch (n){
-		case 0: 
+		case 0:
+			//For zero parameters
 			cerr << "2 arguments needed, 0 provided!" << endl;
 			delete[] params;
 			break;
-		case 1:	
+		case 1:
+			//For 1 parameter
 			cerr << "Need 1 more argument!" << endl;
 			delete[] params[0];
 			delete[] params;
 			break;
-		case 3:	
+		case 3:
+			//For more than 2 parameters
 			cerr << "Provide no more than 2 arguments for search!" << endl;
 			free2D(params,2);
 			break;
-		default: 
+		default:
+			//When 2 arguments are provided check the 1st one to be a number
 			if(!numberCheck(params[0]))	{
 				cerr << "1st argument must be an integer!" << endl;
 				free2D(params,2);
 				break;
 			}
 			int argLine  = atoi(params[0]);
+			//Not allowing unreasonable number of line
 			if(argLine >= lineNum || argLine < 0 ) cerr << "Not a valid line number!" << endl;
+			//Finding the result
 			else cout << params[0] << " " << params[1] << " " << tf(trie,argLine,params[1]) << endl;
 			free2D(params,2);
 	}
 }
 
+//Tf Helper Function
 int tf(Trie* trie, const int& id, const char* word){
 	PostingList* plist = trie->search(word);
 	if (plist!=NULL) return plist->tf(id);

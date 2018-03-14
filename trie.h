@@ -14,15 +14,17 @@ class Trie {
 		char letter;
 		Node* down;
 		Node* right;
-		//Node* children;
 		PostingList* plist;
 		Node(char letter, PostingList* plist = NULL);
 		~Node();
 	};
 	Node* head;
-	int numNodes; //Node (Letter) counter with root node inside
-	int numWords; //Word counter
-	int maxLen; // Maximum length of word
+	//Node (Letter) counter with root node inside
+	int numNodes;
+	//Word counter
+	int numWords;
+	//Maximum length of word
+	int maxLen; 
 public:
 	Trie();
 	void add(const char* word, const int& lineNum);

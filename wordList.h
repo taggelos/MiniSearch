@@ -2,15 +2,12 @@
 #include <iostream>
 #include "postingList.h"
 #include "trie.h"
+#include "heap.h"
 #include <math.h> //log //floor
 #include <cstring> //strcpy
 #include <iomanip> //precision
-
-//ioctl
-#include <cstdio>
-#include <sys/ioctl.h>
-
-#include "heap.h"
+#include <cstdio> //ioctl
+#include <sys/ioctl.h> //ioctl
 
 using namespace std;
 
@@ -25,21 +22,20 @@ class WordList {
 		~Node();
 	};
 	Node* head;
-	//Number of Nodes (Lines or Queries)
+	//Number of Nodes
 	int numNodes;	
 public:
 	WordList();
 	void add(char* word);
 	int countNodes();
-	void print();
 	void search(Trie* trie, const int& N, const int& K, char** documents, int* nwords);
 	void printSpaces(int num);
+	void printLine(int start, int letters, char* arr);
 	void specialPrint(int i, HeapNode* hn, char * underline, char* original);
 	char* fillWhiteSpace(char* line, size_t num);
 	void replace(char* original, char* underline, char* word);
 	char* createUnderLine(char* original);
 	~WordList();	
 };
-
 
 #endif
