@@ -17,8 +17,7 @@ int main(int argc, char* argv[]){
 	char *cmd;
 	char *mystring = NULL;
 	size_t s = 0;
-	while(1){
-		getline(&mystring, &s, stdin);
+	while(getline(&mystring, &s, stdin)!=-1){
 		//Delete \n
 		mystring[strlen(mystring)-1]= '\0';
 		//Handle enter
