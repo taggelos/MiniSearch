@@ -66,7 +66,6 @@ double PostingList::idf(const int& N, const int& nqi ){
 
 //Score type
 double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
-	//return only 4 digits after comma
 	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
 }
 
