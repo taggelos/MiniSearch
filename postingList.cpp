@@ -42,6 +42,10 @@ int PostingList::getTotalTimes(){
 	return totalTimes;
 }
 
+int PostingList::countNodes(){
+	return numNodes;
+}
+
 void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords){
 	int D=0;
 	//Idf

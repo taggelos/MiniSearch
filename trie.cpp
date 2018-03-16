@@ -112,7 +112,7 @@ void Trie::traverse(Node* n,char* word,int i){
 		//Finish the word
 		word[i+1] = '\0';
 		//Get total times from its Posting List
-		cout << word << " " << n->plist->getTotalTimes() <<endl;
+		cout << word << " " << n->plist->countNodes() <<endl;
 	}
 	//Traverse all Nodes Down and then Right
 	if (n->down!=NULL) traverse(n->down,word,i+1);

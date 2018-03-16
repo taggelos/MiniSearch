@@ -63,7 +63,7 @@ void df(Trie* trie){
 		if (param!=NULL){
 			//Search for the specific word
 			PostingList* plist = trie->search(param);
-			if (plist!=NULL) cout << param << " " << plist->getTotalTimes() <<endl;
+			if (plist!=NULL) cout << param << " " << plist->countNodes() <<endl;
 			else cout << "The word was not found." <<endl;
 		}
 		//Df with no parameters

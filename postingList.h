@@ -26,8 +26,9 @@ class PostingList {
 public:
 	PostingList(int line);
 	void add(int line);
+	//Number of times a word appears in the file, if needed in future problem
 	int getTotalTimes();
-	//int countNodes();
+	int countNodes();
 	void score(double* bm25, bool* flags, int avgdl, int N, int* nwords);
 	//term frequency function
 	int tf(int line);
