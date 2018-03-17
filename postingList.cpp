@@ -46,7 +46,7 @@ int PostingList::countNodes(){
 	return numNodes;
 }
 
-void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords){
+void PostingList::score(double* bm25, bool* flags, double avgdl, int N, int* nwords){
 	int D=0;
 	//Idf
 	double curIdf;
@@ -65,11 +65,11 @@ void PostingList::score(double* bm25, bool* flags, int avgdl, int N, int* nwords
 
 //Idf
 double PostingList::idf(const int& N, const int& nqi ){
-	return log((N - nqi + 0.5)/(nqi + 0.5));
+	return log10((N - nqi + 0.5)/(nqi + 0.5));
 }
 
 //Score type
-double PostingList::fscore(const double& idf, const int& tf, const int& avgdl, const int& D, const double& k1, const double& b){
+double PostingList::fscore(const double& idf, const int& tf, const double& avgdl, const int& D, const double& k1, const double& b){
 	return idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * D/avgdl));
 }
 

@@ -49,7 +49,7 @@ void WordList::search(Trie* trie, const int& N, const int& K, char** documents, 
 	//To find if a score cell was 0 or became 0
 	bool bm25flags [N]={};
 	//Average number of words
-	int avgdl = nwords[N] / N;
+	double avgdl = (double) nwords[N] / N;
 	//Flag to see if we found any word
 	bool flag = true;
 
