@@ -159,10 +159,12 @@ void WordList::specialPrint(int i, HeapNode* hn, char * underline, char* origina
 		cout << "Oops!" <<endl;
 		return;
 	}
-	int lines = (int)strlen(original) / letters;
-	if (strlen(original) % letters !=0) lines++;
+	int len = (int)strlen(original);
+	int lines =  len / letters;
+	if (len % letters !=0) lines++;
 	//Start
 	cout << i << ".("<< hn->id <<")[" << setprecision(4) << fixed << hn->score << "] ";
+	if(lines==1) letters = len;
 	for (int i=0;i<letters;i++) cout<< original[i];
 	cout << endl;
 	printLine(start,letters,underline);
@@ -177,7 +179,7 @@ void WordList::specialPrint(int i, HeapNode* hn, char * underline, char* origina
 	}
 	//Last
 	if(lines > 1){
-		letters = (int)strlen(original);
+		letters = len;
 		printLine(start,letters,original);
 		printLine(start,letters,underline);
 	}
