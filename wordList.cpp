@@ -179,7 +179,7 @@ void WordList::specialPrint(int i, HeapNode* hn, char * underline, char* origina
 	}
 	//Last
 	if(lines > 1){
-		letters = len;
+		letters = (int)strlen(original);
 		printLine(start,letters,original);
 		printLine(start,letters,underline);
 	}
