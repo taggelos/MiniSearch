@@ -34,7 +34,7 @@ void WordList::add(char* word){
 }
 
 //Count Digits (Did not see that coming)
-int countDigits(int n){
+int WordList::countDigits(int n){
 	int count = 1;
 	while (n > 9) {
 		n = n / 10;

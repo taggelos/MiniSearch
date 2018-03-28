@@ -27,8 +27,8 @@ class WordList {
 public:
 	WordList();
 	void add(char* word);
-	int countNodes();
 	void search(Trie* trie, const int& N, const int& K, char** documents, int* nwords);
+	int countDigits(int n);
 	void printSpaces(int num);
 	void printLine(int start, int letters, char* arr);
 	void specialPrint(int i, HeapNode* hn, char * underline, char* original);
