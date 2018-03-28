@@ -14,5 +14,4 @@ Each document has the appropriate number starting from 0.
 <b>/df q1</b>                (document frequency of specific word) <br/>
 <b>/tf</b>                   (term frequency) <br/>
 
-The score of each document was calculated using bm25
-https://en.wikipedia.org/wiki/Okapi_BM25
+The score of each document was calculated using [bm25](https://en.wikipedia.org/wiki/Okapi_BM25)
