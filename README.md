@@ -15,3 +15,7 @@ Each document has the appropriate number starting from 0.
 <b>/tf</b>                   (term frequency) <br/>
 
 The score of each document was calculated using [bm25](https://en.wikipedia.org/wiki/Okapi_BM25)
+
+The trie structure can be seen in the image below
+
+![Image](images/architecture.png)
